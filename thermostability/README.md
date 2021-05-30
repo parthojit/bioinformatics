@@ -8,7 +8,7 @@ Supervised Learning -  SVM, RF, ANN, NBC, KNN
 Regression - PLS
 
 # Steps
-1.  Evaluate ddG and dTm binary classification for 6 models and evaluate CV accuracy, Test accuracy and Test AUC.
+1. Evaluate ddG and dTm binary classification for 6 models and evaluate CV accuracy, Test accuracy and Test AUC.
 
 2. Evaluate ddG and dTm ternary classification for 6 models and evaluate CV accuracy, Test accuracy and Test AUC.
 

@@ -6,26 +6,43 @@ from sklearn.metrics import classification_report
 
 class ThermoClassifer(object):
     def __init__(self):
-        self.df_train = pd.read_csv('../thermostability/src/ddg_bin_train.csv')
-        self.df_test = pd.read_csv('../thermostability/src/ddg_bin_test.csv')
+        # self.df_train = pd.read_csv('../thermostability/src/ddg_bin_train.csv')
+        # self.df_test = pd.read_csv('../thermostability/src/ddg_bin_test.csv')
+        # self.df_train = pd.read_csv('../thermostability/src/dTm_bin_train.csv')
+        # self.df_test = pd.read_csv('../thermostability/src/dTm_bin_test.csv')
+        # self.df_train = pd.read_csv('../thermostability/src/ddg_ter_train.csv')
+        # self.df_test = pd.read_csv('../thermostability/src/ddg_ter_test.csv')
+        self.df_train = pd.read_csv('../thermostability/src/dTm_ter_train.csv')
+        self.df_test = pd.read_csv('../thermostability/src/dTm_ter_test.csv')
 
-    def return_array(self, df:pd.DataFrame):
+
+    def return_array_bin(self, df:pd.DataFrame):
         X = df.iloc[:,0:len(df.columns)-1]
-        y = pd.get_dummies(df['ddGC'])
+        y = pd.get_dummies(df['dTmC'])
         y = y['stable']
+        return X,y
+
+    def return_array_ter(self, df:pd.DataFrame):
+        X = df.iloc[:,0:len(df.columns)-1]
+        df = df.replace({'ddGC': {'unstable' : 0, 
+                                    'neutral' : 1, 
+                                    'stable' : 2}})
+        y = df['dTmC']
         return X,y
     
     def fetch_data(self):
-        X_train, y_train = self.return_array(self.df_train)
-        X_test, y_test = self.return_array(self.df_test)
+        # X_train, y_train = self.return_array_bin(self.df_train)
+        # X_test, y_test = self.return_array_bin(self.df_test)
+        X_train, y_train = self.return_array_ter(self.df_train)
+        X_test, y_test = self.return_array_ter(self.df_test)
         return X_train, X_test, y_train, y_test
 
     def svm_params(self, X_train, X_test, y_train, y_test):
         param_grid = {'C': [0.1, 1, 10, 100],  
               'gamma': [1, 0.1, 0.01, 0.001, 0.0001], 
               'gamma':['scale', 'auto'],
-              'kernel': ['linear']}
-        grid = GridSearchCV(SVC(), param_grid, refit = True, verbose = 3, n_jobs=-1)
+              'kernel': ['rbf']}
+        grid = GridSearchCV(SVC(), param_grid, refit = True, verbose = 3, n_jobs=-1, cv=10)
         grid.fit(X_train, y_train)
         print(grid.best_params_) 
         grid_predictions = grid.predict(X_test) 
@@ -40,7 +57,7 @@ class ThermoClassifer(object):
             'alpha': [0.0001, 0.05],
             'learning_rate': ['constant','adaptive'],
         }
-        grid = GridSearchCV(MLPClassifier(), param_grid, refit = True, verbose = 3, n_jobs=-1)
+        grid = GridSearchCV(MLPClassifier(), param_grid, refit = True, verbose = 3, n_jobs=-1, cv=10)
         grid.fit(X_train, y_train)
         print(grid.best_params_) 
         grid_predictions = grid.predict(X_test) 
@@ -50,8 +67,8 @@ class ThermoClassifer(object):
 
     def run(self):
         X_train, X_test, y_train, y_test = self.fetch_data()
-        # self.svm_params(X_train, X_test, y_train, y_test)
-        self.ann_params(X_train, X_test, y_train, y_test)
+        self.svm_params(X_train, X_test, y_train, y_test)
+        # self.ann_params(X_train, X_test, y_train, y_test)
 
 if __name__=="__main__":
     t = ThermoClassifer()

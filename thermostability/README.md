@@ -14,6 +14,6 @@ Regression - PLS
 
 3. Evaluate ddG regression.
 
-4. Evaluate dTm regression.
+4. Evaluate dTm regression. 
 
-5. Feature Selection
+5. Feature Selection *

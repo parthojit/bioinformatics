@@ -5,7 +5,7 @@ Protherm is a database which consists of thousands of protein mutants’thermost
 # Methods
 Supervised Learning -  SVM, RF, ANN, NBC, KNN
 
-Regression - PLS
+Regression - SVR, KNN Reg, MLP Reg, RF Reg
 
 # Steps
 1. Evaluate ddG and dTm binary classification for 6 models and evaluate CV accuracy, Test accuracy and Test AUC.
